@@ -1,0 +1,86 @@
+version: "1"
+generated_at: "2026-03-31T10:00:00Z"
+project: go-api
+
+plan:
+  total_steps: 5
+  estimated_effort: "2-3 hours"
+  risk_level: low
+
+steps:
+  - order: 1
+    name: "Configure existing linter"
+    description: "Enable gocognit and update errcheck settings in .golangci.yml"
+    category: linting
+    action: config_change
+    files_affected:
+      - .golangci.yml
+    risk: low
+    reversible: true
+    autofix_eligible: true
+    commands:
+      - description: "Verify linter runs after config change"
+        command: "golangci-lint run ./..."
+
+  - order: 2
+    name: "Install govulncheck"
+    description: "Add Go vulnerability scanner for dependency security checking"
+    category: security
+    action: install_tool
+    risk: low
+    reversible: true
+    autofix_eligible: false
+    commands:
+      - description: "Install govulncheck"
+        command: "go install golang.org/x/vuln/cmd/govulncheck@latest"
+      - description: "Run initial scan"
+        command: "govulncheck ./..."
+
+  - order: 3
+    name: "Add coverage threshold"
+    description: "Configure go test coverage with 70% threshold gate"
+    category: testing
+    action: config_change
+    files_affected:
+      - Makefile
+      - .github/workflows/ci.yml
+    risk: low
+    reversible: true
+    autofix_eligible: true
+    commands:
+      - description: "Run tests with coverage"
+        command: "go test ./... -coverprofile=coverage.out"
+      - description: "Check coverage threshold"
+        command: "go tool cover -func=coverage.out"
+
+  - order: 4
+    name: "Add architecture boundary rules"
+    description: "Create semgrep rules to enforce hexagonal layer boundaries"
+    category: architecture
+    action: create_rules
+    files_affected:
+      - .semgrep/
+      - .semgrep/layer-boundaries.yml
+    risk: medium
+    reversible: true
+    autofix_eligible: false
+    commands:
+      - description: "Install semgrep"
+        command: "pip install semgrep"
+      - description: "Validate rules"
+        command: "semgrep --config .semgrep/ --dry-run ."
+
+  - order: 5
+    name: "Update CI pipeline"
+    description: "Add govulncheck, coverage gate, and architecture checks to CI workflow"
+    category: ci
+    action: config_change
+    files_affected:
+      - .github/workflows/ci.yml
+    risk: low
+    reversible: true
+    autofix_eligible: true
+    depends_on: [2, 3, 4]
+    commands:
+      - description: "Validate workflow syntax"
+        command: "gh workflow view ci.yml"

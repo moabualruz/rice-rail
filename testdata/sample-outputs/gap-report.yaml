@@ -1,0 +1,90 @@
+version: "1"
+generated_at: "2026-03-31T10:00:00Z"
+project: go-api
+
+summary:
+  total_checks: 12
+  present_ready: 5
+  present_needs_config: 2
+  needs_new_tool: 3
+  not_applicable: 2
+
+gaps:
+  - category: linting
+    tool: golangci-lint
+    status: PRESENT_READY
+    detail: "golangci-lint detected with .golangci.yml config"
+    config_path: .golangci.yml
+    action: none
+
+  - category: formatting
+    tool: gofmt
+    status: PRESENT_READY
+    detail: "gofmt available via Go toolchain"
+    action: none
+
+  - category: testing
+    tool: go-test
+    status: PRESENT_READY
+    detail: "go test available, Makefile has test target"
+    action: none
+
+  - category: ci
+    tool: github-actions
+    status: PRESENT_READY
+    detail: "CI workflow exists at .github/workflows/ci.yml"
+    config_path: .github/workflows/ci.yml
+    action: none
+
+  - category: build
+    tool: make
+    status: PRESENT_READY
+    detail: "Makefile present with build/test/lint targets"
+    config_path: Makefile
+    action: none
+
+  - category: linting
+    tool: errcheck
+    status: PRESENT_NEEDS_CONFIG
+    detail: "errcheck enabled in golangci-lint but check-blank not set"
+    config_path: .golangci.yml
+    action: "Add check-blank: true to errcheck settings"
+    priority: low
+
+  - category: security
+    tool: govulncheck
+    status: NEEDS_NEW_TOOL
+    detail: "No vulnerability scanner configured"
+    action: "Install govulncheck: go install golang.org/x/vuln/cmd/govulncheck@latest"
+    priority: medium
+
+  - category: architecture
+    tool: import-boundary-checker
+    status: NEEDS_NEW_TOOL
+    detail: "No import boundary enforcement tool found"
+    action: "Add go-architect or custom semgrep rules for layer enforcement"
+    priority: high
+
+  - category: complexity
+    tool: gocognit
+    status: PRESENT_NEEDS_CONFIG
+    detail: "golangci-lint installed but gocognit linter not enabled"
+    action: "Enable gocognit in .golangci.yml linters section"
+    priority: low
+
+  - category: coverage
+    tool: go-cover
+    status: NEEDS_NEW_TOOL
+    detail: "No coverage threshold enforcement configured"
+    action: "Add coverage check to CI with -coverprofile and threshold gate"
+    priority: medium
+
+  - category: containers
+    tool: docker
+    status: NOT_APPLICABLE
+    detail: "No Dockerfile present, containerization not required for fixture"
+
+  - category: database
+    tool: migrations
+    status: NOT_APPLICABLE
+    detail: "No database usage detected"

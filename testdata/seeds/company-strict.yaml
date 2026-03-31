@@ -1,0 +1,17 @@
+answers:
+  arch_target: modular_monolith
+  safety_mode: strict
+  allow_safe_autofix: "true"
+  allow_unsafe_autofix: "false"
+  allow_codemods: "true"
+  separate_baseline: "true"
+  constitution_changes_ack: "true"
+  mcp_enabled: "true"
+multi:
+  block_on:
+    - lint
+    - tests
+    - typecheck
+    - forbidden_imports
+    - architecture
+    - security

@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g. v0.1.0)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, darwin, windows]
+        goarch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          ext=""
+          if [ "$GOOS" = "windows" ]; then ext=".exe"; fi
+          go build -ldflags "-X main.version=${{ inputs.version }}" \
+            -o rice-rail-${{ matrix.goos }}-${{ matrix.goarch }}${ext} \
+            ./cmd/rice-rail
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rice-rail-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: rice-rail-*

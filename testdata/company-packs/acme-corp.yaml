@@ -1,0 +1,37 @@
+name: acme-corp
+version: "1.0"
+description: "Acme Corp engineering standards"
+doctrine:
+  architecture:
+    target_style: modular_monolith
+    dependency_policy:
+      no_cycles: true
+      restrict_cross_context_imports: true
+    domain_rules:
+      no_framework_types_in_domain: true
+      repositories_as_interfaces_only: true
+  quality:
+    safety_mode: strict
+    block_on:
+      - lint
+      - tests
+      - typecheck
+      - architecture
+    advisory_on:
+      - complexity
+      - duplication
+  automation:
+    allow_safe_autofix: true
+    allow_unsafe_autofix: false
+    allow_generated_codemods: true
+    baseline_mode_default: safe_only
+  tool_preferences:
+    preferred_linters:
+      - golangci-lint
+      - ruff
+    preferred_formatters:
+      - gofmt
+      - ruff
+    preferred_rule_engines:
+      - semgrep
+      - ast-grep

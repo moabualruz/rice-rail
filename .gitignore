@@ -1,0 +1,21 @@
+# Build
+bin/
+dist/
+*.exe
+*.test
+*.out
+
+# Generated toolkit (per-project, not part of rice-rail source)
+.project-toolkit/
+.agent/
+AGENTS.md
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

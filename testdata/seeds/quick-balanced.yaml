@@ -1,0 +1,19 @@
+answers:
+  repo_purpose: application
+  safety_mode: balanced
+  allow_safe_autofix: "true"
+  allow_unsafe_autofix: "false"
+  separate_baseline: "true"
+  baseline_appetite: incremental
+  generate_ci: "true"
+  generate_wrappers: "true"
+  mcp_enabled: "false"
+  offline_important: "true"
+multi:
+  block_on:
+    - lint
+    - tests
+    - typecheck
+  advisory_on:
+    - complexity
+    - duplication

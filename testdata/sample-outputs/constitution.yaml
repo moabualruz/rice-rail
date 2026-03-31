@@ -1,0 +1,96 @@
+version: "1"
+generated_at: "2026-03-31T10:00:00Z"
+generator: rice-rail v0.1.0
+
+project:
+  name: go-api
+  purpose: application
+  languages:
+    - go
+  primary_language: go
+  build_systems:
+    - make
+  frameworks: []
+
+architecture:
+  target: hexagonal
+  dependency_policy:
+    no_cycles: true
+    restrict_cross_context_imports: true
+  domain_rules:
+    no_framework_types_in_domain: true
+    repositories_as_interfaces_only: true
+  layer_boundaries:
+    - name: domain
+      path: "internal/domain/**"
+      allowed_imports: []
+      forbidden_imports: ["net/http", "database/sql"]
+    - name: service
+      path: "internal/service/**"
+      allowed_imports: ["internal/domain"]
+      forbidden_imports: ["net/http"]
+    - name: handler
+      path: "internal/handler/**"
+      allowed_imports: ["internal/service", "internal/domain"]
+
+quality:
+  safety_mode: strict
+  block_on:
+    - lint
+    - tests
+    - typecheck
+    - forbidden_imports
+    - architecture
+    - security
+  advisory_on:
+    - complexity
+    - duplication
+    - long_functions
+    - naming
+    - coverage
+  thresholds:
+    max_cyclomatic_complexity: 10
+    max_function_lines: 30
+    max_file_lines: 800
+    min_coverage_percent: 70
+
+automation:
+  allow_safe_autofix: true
+  allow_unsafe_autofix: false
+  allow_codemods: true
+  max_files_per_cycle: 10
+  max_lines_per_cycle: 300
+  baseline:
+    enabled: true
+    appetite: now
+
+tools:
+  linters:
+    - name: golangci-lint
+      config_file: .golangci.yml
+      run_command: "golangci-lint run ./..."
+  formatters:
+    - name: gofmt
+      run_command: "gofmt -w ."
+  testers:
+    - name: go-test
+      run_command: "go test ./... -v -race"
+  rule_engines: []
+
+ci:
+  generate: true
+  platform: github-actions
+  workflow_file: .github/workflows/ci.yml
+
+wrappers:
+  generate: true
+  scripts:
+    - name: lint
+      command: "golangci-lint run ./..."
+    - name: test
+      command: "go test ./... -v -race"
+    - name: build
+      command: "go build -o bin/server ./cmd/server"
+
+mcp:
+  enabled: false

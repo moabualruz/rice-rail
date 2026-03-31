@@ -1,0 +1,30 @@
+answers:
+  repo_purpose: application
+  arch_target: hexagonal
+  safety_mode: strict
+  allow_safe_autofix: "true"
+  allow_unsafe_autofix: "false"
+  allow_codemods: "true"
+  separate_baseline: "true"
+  baseline_appetite: now
+  generate_ci: "true"
+  generate_wrappers: "true"
+  constitution_changes_ack: "true"
+  mcp_enabled: "false"
+  offline_important: "true"
+  max_files_per_cycle: "10"
+  max_lines_per_cycle: "300"
+multi:
+  block_on:
+    - lint
+    - tests
+    - typecheck
+    - forbidden_imports
+    - architecture
+    - security
+  advisory_on:
+    - complexity
+    - duplication
+    - long_functions
+    - naming
+    - coverage
