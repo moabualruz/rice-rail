@@ -22,7 +22,7 @@ on:
 jobs:
   build:
     if: ${{ inputs.run_build }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, generic]
     steps:
       - uses: actions/checkout@v4
 
@@ -44,7 +44,7 @@ jobs:
 
   test:
     if: ${{ inputs.run_tests }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, generic]
     steps:
       - uses: actions/checkout@v4
 
@@ -63,7 +63,7 @@ jobs:
 
   lint:
     if: ${{ inputs.run_lint }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, x64, generic]
     steps:
       - uses: actions/checkout@v4
 
