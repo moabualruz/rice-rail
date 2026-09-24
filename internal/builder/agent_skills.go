@@ -279,14 +279,14 @@ func generateAgentsMD(root string, c *constitution.Constitution) error {
 
 	b.WriteString("## Project Constitution\n\n")
 	if c.Architecture.TargetStyle != "" {
-		b.WriteString(fmt.Sprintf("- Architecture: %s\n", c.Architecture.TargetStyle))
+		fmt.Fprintf(&b, "- Architecture: %s\n", c.Architecture.TargetStyle)
 	}
-	b.WriteString(fmt.Sprintf("- Safety mode: %s\n", c.Quality.SafetyMode))
-	b.WriteString(fmt.Sprintf("- Languages: %s\n", strings.Join(c.Project.Languages, ", ")))
-	b.WriteString(fmt.Sprintf("- Blocking checks: %s\n", strings.Join(c.Quality.BlockOn, ", ")))
-	b.WriteString(fmt.Sprintf("- Safe autofix: %v\n", c.Automation.AllowSafeAutofix))
-	b.WriteString(fmt.Sprintf("- Max files per change: %d\n", c.Quality.MaxChangedFilesPerCycle))
-	b.WriteString(fmt.Sprintf("- Max lines per change: %d\n\n", c.Quality.MaxChangedLinesPerCycle))
+	fmt.Fprintf(&b, "- Safety mode: %s\n", c.Quality.SafetyMode)
+	fmt.Fprintf(&b, "- Languages: %s\n", strings.Join(c.Project.Languages, ", "))
+	fmt.Fprintf(&b, "- Blocking checks: %s\n", strings.Join(c.Quality.BlockOn, ", "))
+	fmt.Fprintf(&b, "- Safe autofix: %v\n", c.Automation.AllowSafeAutofix)
+	fmt.Fprintf(&b, "- Max files per change: %d\n", c.Quality.MaxChangedFilesPerCycle)
+	fmt.Fprintf(&b, "- Max lines per change: %d\n\n", c.Quality.MaxChangedLinesPerCycle)
 
 	b.WriteString("## Rules\n\n")
 	b.WriteString("- Run `rice-rail check` before claiming any change is complete\n")
@@ -298,7 +298,7 @@ func generateAgentsMD(root string, c *constitution.Constitution) error {
 	if c.Architecture.Layering.Enabled {
 		b.WriteString("## Architecture Constraints\n\n")
 		for _, fd := range c.Architecture.Layering.ForbiddenDependencies {
-			b.WriteString(fmt.Sprintf("- FORBIDDEN: %s must not depend on %s\n", fd.From, fd.To))
+			fmt.Fprintf(&b, "- FORBIDDEN: %s must not depend on %s\n", fd.From, fd.To)
 		}
 		if c.Architecture.DependencyPolicy.NoCycles {
 			b.WriteString("- No import cycles between modules\n")

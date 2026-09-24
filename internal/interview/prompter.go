@@ -80,8 +80,7 @@ func (t *TerminalPrompter) AskText(question string, defaultVal string) (string, 
 }
 
 func (t *TerminalPrompter) AskNumber(question string, defaultVal int) (int, error) {
-	var result string
-	result = strconv.Itoa(defaultVal)
+	var result = strconv.Itoa(defaultVal)
 	err := huh.NewInput().
 		Title(question).
 		Value(&result).

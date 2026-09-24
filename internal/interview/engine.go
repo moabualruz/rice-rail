@@ -53,9 +53,10 @@ func (e *Engine) Run(prompter Prompter) (*Transcript, error) {
 
 	questions := QuestionCatalog()
 	modeStr := "normal"
-	if e.Mode == ModeQuick {
+	switch e.Mode {
+	case ModeQuick:
 		modeStr = "quick"
-	} else if e.Mode == ModeStrict {
+	case ModeStrict:
 		modeStr = "strict"
 	}
 	e.Transcript.Mode = modeStr

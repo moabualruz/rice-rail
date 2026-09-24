@@ -50,21 +50,21 @@ func (r *Reporter) Print(data any) error {
 // Section prints a labeled section header (text mode only).
 func (r *Reporter) Section(title string) {
 	if r.Format == FormatText {
-		fmt.Fprintf(r.Writer, "\n=== %s ===\n\n", title)
+		_, _ = fmt.Fprintf(r.Writer, "\n=== %s ===\n\n", title)
 	}
 }
 
 // Item prints a key-value pair (text mode only).
 func (r *Reporter) Item(key, value string) {
 	if r.Format == FormatText {
-		fmt.Fprintf(r.Writer, "  %-24s %s\n", key+":", value)
+		_, _ = fmt.Fprintf(r.Writer, "  %-24s %s\n", key+":", value)
 	}
 }
 
 // Status prints a status line with a label and state.
 func (r *Reporter) Status(label, state string) {
 	if r.Format == FormatText {
-		fmt.Fprintf(r.Writer, "  [%s] %s\n", state, label)
+		_, _ = fmt.Fprintf(r.Writer, "  [%s] %s\n", state, label)
 	}
 }
 
