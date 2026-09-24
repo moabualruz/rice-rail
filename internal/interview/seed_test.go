@@ -19,7 +19,7 @@ multi:
     - tests
     - typecheck
 `
-	os.WriteFile(path, []byte(content), 0644)
+	_ = os.WriteFile(path, []byte(content), 0644)
 
 	seed, err := LoadSeed(path)
 	if err != nil {

@@ -97,7 +97,7 @@ func (a *RuffAdapter) Fix(ctx context.Context, targets []string) ([]FixResult, e
 		fmtArgs = append(fmtArgs, ".")
 	}
 
-	a.runner.Run(ctx, "ruff", fmtArgs...)
+	_, _ = a.runner.Run(ctx, "ruff", fmtArgs...)
 
 	return []FixResult{{RuleID: "ruff", Action: "applied", Detail: "ran ruff check --fix + ruff format"}}, nil
 }

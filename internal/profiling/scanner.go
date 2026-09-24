@@ -139,7 +139,7 @@ func (s *Scanner) detectTopology() string {
 
 	// Check for multiple package.json files (workspaces indicator)
 	pkgCount := 0
-	filepath.WalkDir(s.Root, func(path string, d os.DirEntry, err error) error {
+	_ = filepath.WalkDir(s.Root, func(path string, d os.DirEntry, err error) error {
 		if err != nil || d.IsDir() {
 			if d != nil && d.Name() == "node_modules" {
 				return filepath.SkipDir

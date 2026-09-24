@@ -18,7 +18,7 @@ func NewPytestAdapter(runner *exec.Runner, repoRoot string) *PytestAdapter {
 	return &PytestAdapter{runner: runner, repoRoot: repoRoot}
 }
 
-func (a *PytestAdapter) Name() string                { return "pytest" }
+func (a *PytestAdapter) Name() string                 { return "pytest" }
 func (a *PytestAdapter) SupportedLanguages() []string { return []string{"python"} }
 
 func (a *PytestAdapter) Run(ctx context.Context, targets []string) (*TestResult, error) {
@@ -49,9 +49,10 @@ func (a *PytestAdapter) Run(ctx context.Context, targets []string) (*TestResult,
 	}
 
 	// Fallback: infer from exit code
-	if result.ExitCode == 0 {
+	switch result.ExitCode {
+	case 0:
 		tr.Passed = 1 // at least
-	} else if result.ExitCode == 1 {
+	case 1:
 		tr.Failed = 1
 	}
 

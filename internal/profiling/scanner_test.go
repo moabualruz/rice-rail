@@ -11,22 +11,22 @@ func setupTestRepo(t *testing.T) string {
 	dir := t.TempDir()
 
 	// Create Go files
-	os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main"), 0644)
-	os.WriteFile(filepath.Join(dir, "util.go"), []byte("package main"), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "main.go"), []byte("package main"), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "util.go"), []byte("package main"), 0644)
 
 	// Create manifest
-	os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module test"), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module test"), 0644)
 
 	// Create build system
-	os.WriteFile(filepath.Join(dir, "Makefile"), []byte("build:"), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "Makefile"), []byte("build:"), 0644)
 
 	// Create tool config
-	os.WriteFile(filepath.Join(dir, ".golangci.yml"), []byte("linters:"), 0644)
+	_ = os.WriteFile(filepath.Join(dir, ".golangci.yml"), []byte("linters:"), 0644)
 
 	// Create architecture dirs
-	os.MkdirAll(filepath.Join(dir, "cmd"), 0755)
-	os.MkdirAll(filepath.Join(dir, "internal"), 0755)
-	os.MkdirAll(filepath.Join(dir, "pkg"), 0755)
+	_ = os.MkdirAll(filepath.Join(dir, "cmd"), 0755)
+	_ = os.MkdirAll(filepath.Join(dir, "internal"), 0755)
+	_ = os.MkdirAll(filepath.Join(dir, "pkg"), 0755)
 
 	return dir
 }
@@ -146,7 +146,7 @@ func TestScanTopologySingle(t *testing.T) {
 
 func TestScanTopologyMonorepo(t *testing.T) {
 	dir := t.TempDir()
-	os.WriteFile(filepath.Join(dir, "nx.json"), []byte("{}"), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "nx.json"), []byte("{}"), 0644)
 
 	scanner := NewScanner(dir)
 	profile, err := scanner.Scan()
@@ -162,9 +162,9 @@ func TestScanTopologyMonorepo(t *testing.T) {
 func TestScanSkipsNodeModules(t *testing.T) {
 	dir := t.TempDir()
 	nmDir := filepath.Join(dir, "node_modules", "pkg")
-	os.MkdirAll(nmDir, 0755)
-	os.WriteFile(filepath.Join(nmDir, "index.js"), []byte(""), 0644)
-	os.WriteFile(filepath.Join(dir, "app.go"), []byte("package main"), 0644)
+	_ = os.MkdirAll(nmDir, 0755)
+	_ = os.WriteFile(filepath.Join(nmDir, "index.js"), []byte(""), 0644)
+	_ = os.WriteFile(filepath.Join(dir, "app.go"), []byte("package main"), 0644)
 
 	scanner := NewScanner(dir)
 	profile, err := scanner.Scan()

@@ -27,44 +27,44 @@ func RenderOperatorGuide(c *constitution.Constitution) string {
 	b.WriteString("| `rice-rail doctor` | Diagnose toolkit health |\n\n")
 
 	b.WriteString("## Safety Policy\n\n")
-	b.WriteString(fmt.Sprintf("- **Safety mode**: %s\n", c.Quality.SafetyMode))
-	b.WriteString(fmt.Sprintf("- **Safe autofix**: %v\n", c.Automation.AllowSafeAutofix))
-	b.WriteString(fmt.Sprintf("- **Unsafe autofix**: %v (requires --with-ai flag)\n", c.Automation.AllowUnsafeAutofix))
-	b.WriteString(fmt.Sprintf("- **Generated codemods**: %v\n", c.Automation.AllowGeneratedCodemods))
-	b.WriteString(fmt.Sprintf("- **Cross-module rewrites**: %v\n\n", c.Automation.AllowCrossModuleRewrites))
+	fmt.Fprintf(&b, "- **Safety mode**: %s\n", c.Quality.SafetyMode)
+	fmt.Fprintf(&b, "- **Safe autofix**: %v\n", c.Automation.AllowSafeAutofix)
+	fmt.Fprintf(&b, "- **Unsafe autofix**: %v (requires --with-ai flag)\n", c.Automation.AllowUnsafeAutofix)
+	fmt.Fprintf(&b, "- **Generated codemods**: %v\n", c.Automation.AllowGeneratedCodemods)
+	fmt.Fprintf(&b, "- **Cross-module rewrites**: %v\n\n", c.Automation.AllowCrossModuleRewrites)
 
 	b.WriteString("## Blocking Checks\n\n")
 	b.WriteString("These checks must pass for any change to be accepted:\n\n")
 	for _, check := range c.Quality.BlockOn {
-		b.WriteString(fmt.Sprintf("- %s\n", check))
+		fmt.Fprintf(&b, "- %s\n", check)
 	}
 
 	b.WriteString("\n## Advisory Checks\n\n")
 	b.WriteString("These produce warnings but do not block:\n\n")
 	for _, check := range c.Quality.AdvisoryOn {
-		b.WriteString(fmt.Sprintf("- %s\n", check))
+		fmt.Fprintf(&b, "- %s\n", check)
 	}
 
 	b.WriteString("\n## Scope Limits\n\n")
-	b.WriteString(fmt.Sprintf("- Max files per cycle: %d\n", c.Quality.MaxChangedFilesPerCycle))
-	b.WriteString(fmt.Sprintf("- Max lines per cycle: %d\n", c.Quality.MaxChangedLinesPerCycle))
+	fmt.Fprintf(&b, "- Max files per cycle: %d\n", c.Quality.MaxChangedFilesPerCycle)
+	fmt.Fprintf(&b, "- Max lines per cycle: %d\n", c.Quality.MaxChangedLinesPerCycle)
 
 	if c.Architecture.TargetStyle != "" {
-		b.WriteString(fmt.Sprintf("\n## Architecture\n\n"))
-		b.WriteString(fmt.Sprintf("- Target style: %s\n", c.Architecture.TargetStyle))
+		b.WriteString("\n## Architecture\n\n")
+		fmt.Fprintf(&b, "- Target style: %s\n", c.Architecture.TargetStyle)
 		if c.Architecture.Layering.Enabled {
-			b.WriteString(fmt.Sprintf("- Layers: %v\n", c.Architecture.Layering.Layers))
+			fmt.Fprintf(&b, "- Layers: %v\n", c.Architecture.Layering.Layers)
 			b.WriteString("- Forbidden dependencies:\n")
 			for _, fd := range c.Architecture.Layering.ForbiddenDependencies {
-				b.WriteString(fmt.Sprintf("  - %s → %s\n", fd.From, fd.To))
+				fmt.Fprintf(&b, "  - %s → %s\n", fd.From, fd.To)
 			}
 		}
 	}
 
 	b.WriteString("\n## Workflow\n\n")
-	b.WriteString(fmt.Sprintf("- Separate baseline from features: %v\n", c.Workflow.SeparateBaselineAndFeatureWork))
-	b.WriteString(fmt.Sprintf("- Constitution changes need ack: %v\n", c.Workflow.RequireHumanAckForConstitutionChanges))
-	b.WriteString(fmt.Sprintf("- CI integration: %v\n", c.Workflow.GenerateCIIntegration))
+	fmt.Fprintf(&b, "- Separate baseline from features: %v\n", c.Workflow.SeparateBaselineAndFeatureWork)
+	fmt.Fprintf(&b, "- Constitution changes need ack: %v\n", c.Workflow.RequireHumanAckForConstitutionChanges)
+	fmt.Fprintf(&b, "- CI integration: %v\n", c.Workflow.GenerateCIIntegration)
 
 	return b.String()
 }
@@ -80,14 +80,14 @@ func RenderRuleCatalog(c *constitution.Constitution, plan *resolution.RolloutPla
 	b.WriteString("| Check | Severity | Status |\n")
 	b.WriteString("|-------|----------|--------|\n")
 	for _, check := range c.Quality.BlockOn {
-		b.WriteString(fmt.Sprintf("| %s | BLOCKING | Active |\n", check))
+		fmt.Fprintf(&b, "| %s | BLOCKING | Active |\n", check)
 	}
 
 	b.WriteString("\n## Advisory Rules\n\n")
 	b.WriteString("| Check | Severity | Status |\n")
 	b.WriteString("|-------|----------|--------|\n")
 	for _, check := range c.Quality.AdvisoryOn {
-		b.WriteString(fmt.Sprintf("| %s | WARNING | Active |\n", check))
+		fmt.Fprintf(&b, "| %s | WARNING | Active |\n", check)
 	}
 
 	if c.Architecture.Layering.Enabled {
@@ -101,7 +101,7 @@ func RenderRuleCatalog(c *constitution.Constitution, plan *resolution.RolloutPla
 			b.WriteString("| Restrict cross-context imports | BLOCKING |\n")
 		}
 		for _, fd := range c.Architecture.Layering.ForbiddenDependencies {
-			b.WriteString(fmt.Sprintf("| No %s → %s | BLOCKING |\n", fd.From, fd.To))
+			fmt.Fprintf(&b, "| No %s → %s | BLOCKING |\n", fd.From, fd.To)
 		}
 	}
 
@@ -123,7 +123,7 @@ func RenderRuleCatalog(c *constitution.Constitution, plan *resolution.RolloutPla
 		b.WriteString("| # | Capability | Action | Risk |\n")
 		b.WriteString("|---|-----------|--------|------|\n")
 		for _, step := range plan.Steps {
-			b.WriteString(fmt.Sprintf("| %d | %s | %s | %s |\n", step.Order, step.Capability, step.Action, step.Risk))
+			fmt.Fprintf(&b, "| %d | %s | %s | %s |\n", step.Order, step.Capability, step.Action, step.Risk)
 		}
 	}
 

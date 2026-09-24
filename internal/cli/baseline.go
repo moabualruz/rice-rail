@@ -90,14 +90,14 @@ func runBaseline(cmd *cobra.Command, args []string) error {
 
 	// Save baseline state
 	stateDir := filepath.Join(cwd, config.StateDir)
-	reporting.SaveBaselineState(stateDir, reporting.BaselineState{
+	_ = reporting.SaveBaselineState(stateDir, reporting.BaselineState{
 		LastRun:    time.Now(),
 		Converged:  result.Converged,
 		Iterations: result.Iterations,
 		StopReason: result.StopReason,
 		Violations: len(result.Residual),
 	})
-	reporting.SaveRunState(stateDir, reporting.RunState{
+	_ = reporting.SaveRunState(stateDir, reporting.RunState{
 		Command:   "baseline",
 		Timestamp: time.Now(),
 		Success:   result.Converged,

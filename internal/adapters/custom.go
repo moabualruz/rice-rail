@@ -23,7 +23,7 @@ func NewCustomAdapter(runner *exec.Runner, def constitution.CustomTool) *CustomA
 	return &CustomAdapter{runner: runner, def: def}
 }
 
-func (a *CustomAdapter) Name() string                { return a.def.Name }
+func (a *CustomAdapter) Name() string                 { return a.def.Name }
 func (a *CustomAdapter) SupportedLanguages() []string { return a.def.Languages }
 
 // Check runs the tool's check command and parses output into violations.
@@ -102,7 +102,7 @@ type CustomTestRunnerAdapter struct {
 	inner *CustomAdapter
 }
 
-func (a *CustomTestRunnerAdapter) Name() string                { return a.inner.Name() }
+func (a *CustomTestRunnerAdapter) Name() string                 { return a.inner.Name() }
 func (a *CustomTestRunnerAdapter) SupportedLanguages() []string { return a.inner.SupportedLanguages() }
 func (a *CustomTestRunnerAdapter) Run(ctx context.Context, targets []string) (*TestResult, error) {
 	return a.inner.RunTest(ctx, targets)
@@ -114,7 +114,7 @@ type CustomTypecheckAdapter struct {
 	inner *CustomAdapter
 }
 
-func (a *CustomTypecheckAdapter) Name() string                { return a.inner.Name() }
+func (a *CustomTypecheckAdapter) Name() string                 { return a.inner.Name() }
 func (a *CustomTypecheckAdapter) SupportedLanguages() []string { return a.inner.SupportedLanguages() }
 func (a *CustomTypecheckAdapter) Check(ctx context.Context, targets []string) ([]Violation, error) {
 	return a.inner.Check(ctx, targets)
@@ -281,11 +281,6 @@ func (a *CustomAdapter) parseJSON(output string) []Violation {
 	return nil
 }
 
-type jsonItem struct {
-	File, Path, Message, Severity, Rule, RuleID string
-	Line                                         int
-}
-
 func jsonItemsToViolations[T any](items []T, defaultRule string) []Violation {
 	// Re-marshal and unmarshal to normalize field access
 	data, _ := json.Marshal(items)
@@ -298,7 +293,7 @@ func jsonItemsToViolations[T any](items []T, defaultRule string) []Violation {
 		Rule     string `json:"rule"`
 		RuleID   string `json:"ruleId"`
 	}
-	json.Unmarshal(data, &normalized)
+	_ = json.Unmarshal(data, &normalized)
 
 	var violations []Violation
 	for _, item := range normalized {
@@ -314,9 +309,10 @@ func jsonItemsToViolations[T any](items []T, defaultRule string) []Violation {
 			rule = defaultRule
 		}
 		severity := "BLOCKING"
-		if item.Severity == "warning" || item.Severity == "warn" {
+		switch item.Severity {
+		case "warning", "warn":
 			severity = "WARNING"
-		} else if item.Severity == "info" || item.Severity == "information" {
+		case "info", "information":
 			severity = "INFO"
 		}
 
@@ -364,9 +360,10 @@ func (a *CustomAdapter) parseSARIF(output string) []Violation {
 	for _, run := range sarif.Runs {
 		for _, r := range run.Results {
 			severity := "BLOCKING"
-			if r.Level == "warning" {
+			switch r.Level {
+			case "warning":
 				severity = "WARNING"
-			} else if r.Level == "note" {
+			case "note":
 				severity = "INFO"
 			}
 
