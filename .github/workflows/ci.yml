@@ -25,7 +25,7 @@ on:
 
 jobs:
   build:
-    if: ${{ inputs.run_build != false }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_build }}
     runs-on: [self-hosted, linux, x64, generic]
     steps:
       - uses: actions/checkout@v4
@@ -47,7 +47,7 @@ jobs:
           path: bin/rice-rail
 
   test:
-    if: ${{ inputs.run_tests != false }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_tests }}
     runs-on: [self-hosted, linux, x64, generic]
     steps:
       - uses: actions/checkout@v4
@@ -66,7 +66,7 @@ jobs:
           go test ./... -count=1 2>&1 | grep -E "^(ok|FAIL)" >> $GITHUB_STEP_SUMMARY || true
 
   lint:
-    if: ${{ inputs.run_lint != false }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_lint }}
     runs-on: [self-hosted, linux, x64, generic]
     steps:
       - uses: actions/checkout@v4
